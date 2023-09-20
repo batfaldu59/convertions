@@ -1,55 +1,67 @@
+def effectuer_convertion(unit1: str, unit2: str, facteur, reverse=False):
+    if reverse:
+        facteur = 1/facteur
+        unit1, unit2 = unit2, unit1
+
+    nombre_a_convertir = input(f"Valeur à convertir (de {unit1} vers {unit2}, 'q' pour quitter): ")
+    if nombre_a_convertir == 'q':
+        return True
+    try:
+        nombre_a_convertir_float = float(nombre_a_convertir)
+        print(f"{nombre_a_convertir_float} {unit1} = {round(nombre_a_convertir_float*facteur, 2)} {unit2}")
+    except ValueError:
+        print("ERREUR: vous devez rentrer un nombre valide. Réessayez!")
+        return choix_convertion(unit1, unit2, facteur, reverse)
+    return False
+
+def choix_convertion(nb_choix):
+    choix_str = input(f"Votre choix (entre 1 et {index}): ")
+    try:
+        choix_int = int(choix_str)
+        if not 1 <= choix_int <= nb_choix:
+            print(f"ERREUR: vous devez rentrer un nombre entre 1 et {nb_choix}!!!")
+            return choix_convertion(nb_choix)
+        return choix_int
+    except ValueError:
+        print("ERREUR: vous devez rentrer un nombre valide. Réessayez!")
+        return choix_convertion(nb_choix)
+
 """
-1 - Demander à l'utilisateur si il souhaite convertir de "pouces vers cm" ou "cm vers pouces"
-
-2 - Demander à l'utilisateur de rentrer la valeur à convertir (en réaffichant l’unité demandée)
-
-3 - Afficher la valeur convertie (et l'unité : cm ou pouces)
-
-- fin du programme.
-1 pouce = 2.54 cm
-
-1 cm = 0.394 pouces
+qui genere des items avec le contraire
+ex: 0 ("pouces", "cm", 2.54), 1 ("cm", "pouces", 0.39), ...
 """
+convertions = (
+    ("POUCES", "CM", 2.54),
+    ("KM", "M", 1000)
+)
+
+index = 0
+print("----- LE CONVERTISSEUR -----")
+for convertion in convertions:
+    index += 1
+    print(f"{index}) {convertion[0]} vers {convertion[1]}")
+
+    index += 1
+    print(f"{index}) {convertion[1]} vers {convertion[0]}")
 
 
-def convertion(unite1, unite2, multiplicateur):
-    nombre_a_convertir_float = 0
-    while nombre_a_convertir_float == 0:
-        nombre_a_convertir = input(f"Valeur à convertir (de {unite1} vers {unite2}): ")
-        try:
-            nombre_a_convertir_float = float(nombre_a_convertir)
-        except:
-            print("ERREUR: vous devez rentrer un nombre valide. Réessayez!")
-        else:
-            print(f"{nombre_a_convertir_float} {unite1} = {nombre_a_convertir_float*multiplicateur} {unite2}")
+choix = choix_convertion(index)
 
+""" 
+définie l'index du tuple convertions 
 
-def choix_convertion():
-    choix_int = 0
-    while choix_int == 0:
-        choix_str = input("Votre choix: ")
-        try:
-            choix_int = int(choix_str)
-        except:
-            print("ERREUR: vous devez rentrer un nombre valide. Réessayez!")
-        else:
-            if choix_int < 1 or choix_int > 2:
-                print("EEREUR: vous devez choisir 1 ou 2. Réessayez!")
-                choix_int = 0
-    return choix_int
+ex: si choix = 2 alors l'index == 0
+"""
+index_choix = (choix-1)//2
+reverse = choix % 2 == 0
 
+unit1 = convertions[index_choix][0]
+unit2 = convertions[index_choix][1]
+facteur = convertions[index_choix][2]
 
-print("-----LE CONVERTISSEUR-----")
-print("1) POUCES VERS CM")
-print("2) CM VERS POUCES")
-choix = choix_convertion()
-quitter_programme = "o"
+while True:
+    if effectuer_convertion(unit1, unit2, facteur, reverse):
+        break
 
-while not quitter_programme == "n":
-    if choix == 1:
-        convertion("pouces", "cm", 2.54)
-    else:
-        convertion("cm", "pouces", 0.394)
-    quitter_programme = input("Voulez-vous reconvertir une valeur (n pour quitter)? ")
 
 print("Fin du programme")
